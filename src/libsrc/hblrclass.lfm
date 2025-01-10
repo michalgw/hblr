@@ -1,0 +1,9 @@
+object HBLRObj: THBLRObj
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  OldCreateOrder = False
+  Height = 252
+  HorizontalOffset = 399
+  VerticalOffset = 269
+  Width = 410
+end
