@@ -444,7 +444,7 @@ METHOD AddValue( cValueName, xValue, lIsVariable ) CLASS TLazReport
 
 METHOD AddRow( cTableName, aValues, aNames ) CLASS TLazReport
 
-   LOCAL nRow, i, cVType
+   LOCAL nRow, i, cVType, xVal
 
    cVType := ValType( aValues )
    IF cVType == 'H' .AND. aNames == NIL
@@ -453,9 +453,14 @@ METHOD AddRow( cTableName, aValues, aNames ) CLASS TLazReport
    nRow := ::RowCount( cTableName )
    FOR i := 1 TO Len( aValues )
       IF cVType == 'H'
-         ::AddValue( cTableName + ':' + AllTrim( Str( nRow ) ) + ':' + aNames[i], hb_HValueAt( aValues, i ) )
+         xVal := hb_HValueAt( aValues, i )
       ELSE
-         ::AddValue( cTableName + ':' + AllTrim( Str( nRow ) ) + ':' + aNames[i], aValues[i] )
+         xVal := aValues[ i ]
+      ENDIF
+      IF ValType( xVal ) == 'A'
+         AEval( xVal, { | aRow | ::AddRow( cTableName + ':' + AllTrim( Str( nRow ) ) + ':' + aNames[ i ], aRow ) } )
+      ELSE
+         ::AddValue( cTableName + ':' + AllTrim( Str( nRow ) ) + ':' + aNames[ i ], xVal )
       ENDIF
    NEXT
 
